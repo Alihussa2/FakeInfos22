@@ -20,10 +20,16 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore FakeInfo.Api
+        run: |
+          dotnet restore FakeInfo.Core/FakeInfo.Core.csproj
+          dotnet restore FakeInfo.Tests/FakeInfo.Tests.csproj
+          dotnet restore FakeInfo.IntegrationTests/FakeInfo.IntegrationTests.csproj
 
       - name: Build
-        run: dotnet build FakeInfo.Api --no-restore
+        run: dotnet build FakeInfo.Core/FakeInfo.Core.csproj --no-restore
 
-      - name: Run all tests
-        run: dotnet test --no-build --verbosity normal
+      - name: Run unit tests
+        run: dotnet test FakeInfo.Tests/FakeInfo.Tests.csproj --verbosity normal
+
+      - name: Run integration tests
+        run: dotnet test FakeInfo.IntegrationTests/FakeInfo.IntegrationTests.csproj --verbosity normal
