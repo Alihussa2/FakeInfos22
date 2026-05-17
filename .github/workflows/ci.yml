@@ -20,10 +20,10 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore FakeInfo.Api
 
       - name: Build
-        run: dotnet build --no-restore
+        run: dotnet build FakeInfo.Api --no-restore
 
       - name: Run all tests
         run: dotnet test --no-build --verbosity normal
