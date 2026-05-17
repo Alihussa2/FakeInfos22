@@ -15,7 +15,6 @@ public class FrontendTests : PageTest
     }
 
     private const string BaseUrl = "http://localhost:5028/index.html";
-
     [Fact]
     public async Task GeneratePerson_Works()
     {
