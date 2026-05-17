@@ -122,11 +122,12 @@ public class FakeService
     private string GenerateCpr(string gender, DateTime dob)
     {
         string datePart = dob.ToString("ddMMyy");
+        string firstThree = _rand.Next(100, 1000).ToString();
 
         int lastDigit = gender == "female"
             ? _rand.Next(0, 5) * 2
             : _rand.Next(0, 5) * 2 + 1;
 
-        return datePart + _rand.Next(1000, 9999).ToString();
+        return datePart + firstThree + lastDigit;
     }
 }

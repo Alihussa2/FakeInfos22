@@ -7,7 +7,12 @@ namespace FakeInfo.Api.Controllers;
 [Route("api/person")]
 public class PersonController : ControllerBase
 {
-    private readonly PersonGenerator _generator = new();
+    private readonly PersonGenerator _generator;
+
+    public PersonController(PersonGenerator generator)
+    {
+        _generator = generator;
+    }
 
     [HttpGet("full")]
     public IActionResult GetFull()
