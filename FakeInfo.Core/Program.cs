@@ -10,16 +10,15 @@ builder.Services.AddScoped<PersonGenerator>();
 
 var app = builder.Build();
 
-// Swagger (kun i development)
+// Swagger
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// 👇 VIGTIGT: gør frontend muligt
-app.UseDefaultFiles();   // loader index.html automatisk
-app.UseStaticFiles();    // gør wwwroot tilgængelig
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 
@@ -28,3 +27,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }
