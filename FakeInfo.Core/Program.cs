@@ -1,3 +1,4 @@
+using FakeInfo.Core.Data;
 using FakeInfo.Core.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +11,6 @@ builder.Services.AddScoped<PersonGenerator>();
 
 var app = builder.Build();
 
-// Swagger
 // Create database automatically if it does not exist
 using (var scope = app.Services.CreateScope())
 {
@@ -35,3 +35,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// Needed for WebApplicationFactory in integration tests
+public partial class Program { }
