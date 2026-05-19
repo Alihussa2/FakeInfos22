@@ -11,6 +11,14 @@ builder.Services.AddScoped<PersonGenerator>();
 var app = builder.Build();
 
 // Swagger
+// Create database automatically if it does not exist
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<FakeInfoDbContext>();
+    db.Database.EnsureCreated();
+}
+
+// Swagger only in development
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -27,5 +35,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-public partial class Program { }
