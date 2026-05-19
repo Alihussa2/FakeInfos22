@@ -1,7 +1,10 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using FakeInfo.Core.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using FakeInfoModels;
 
@@ -24,8 +27,24 @@ public class ApiIntegrationTests
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        _factory = new WebApplicationFactory<Program>(); // booter hele applikationen én gang for alle tests
-        _client = _factory.CreateClient();               // opretter en HTTP klient der taler direkte med den in-memory app
+        _factory = new WebApplicationFactory<Program>()
+            .WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureServices(services =>
+                {
+                    // Fjern den rigtige MySQL database så tests ikke kræver en kørende database
+                    var descriptor = services.SingleOrDefault(
+                        d => d.ServiceType == typeof(DbContextOptions<FakeInfoDbContext>));
+                    if (descriptor != null)
+                        services.Remove(descriptor);
+
+                    // Brug in-memory database i stedet under tests
+                    services.AddDbContext<FakeInfoDbContext>(options =>
+                        options.UseInMemoryDatabase("TestDb"));
+                });
+            });
+
+        _client = _factory.CreateClient(); // opretter en HTTP klient der taler direkte med den in-memory app
     }
 
     [OneTimeTearDown]
