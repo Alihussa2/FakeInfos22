@@ -1,4 +1,6 @@
+using FakeInfo.Core.Data;
 using FakeInfo.Core.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,20 +8,33 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpClient();
+
 builder.Services.AddScoped<PersonGenerator>();
+
+// SQLite database
+builder.Services.AddDbContext<FakeInfoDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
-// Swagger (kun i development)
+// Create database automatically if it does not exist
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<FakeInfoDbContext>();
+    db.Database.EnsureCreated();
+}
+
+// Swagger only in development
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// 👇 VIGTIGT: gør frontend muligt
-app.UseDefaultFiles();   // loader index.html automatisk
-app.UseStaticFiles();    // gør wwwroot tilgængelig
+// Frontend
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 
