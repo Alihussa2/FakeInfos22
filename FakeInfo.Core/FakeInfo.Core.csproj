@@ -8,21 +8,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
+        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FakeInfo.IntegrationTests\FakeInfo.IntegrationTests.csproj" />
-      <ProjectReference Include="..\FakeInfo.Tests\FakeInfo.Tests.csproj" />
-      <ProjectReference Include="..\FakeInfoModels\FakeInfoModels.csproj" />
+        <ProjectReference Include="..\FakeInfoModels\FakeInfoModels.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Data\addresses.sql" />
-      <Content Include="Data\addresses.sql">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
+        <None Remove="Data\addresses.sql" />
+        <Content Include="Data\addresses.sql">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
 </Project>
