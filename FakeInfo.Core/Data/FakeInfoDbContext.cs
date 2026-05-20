@@ -10,4 +10,5 @@ public class FakeInfoDbContext : DbContext
     }
 
     public DbSet<GeneratedPersonEntity> GeneratedPersons => Set<GeneratedPersonEntity>();
+    public DbSet<UserEntity> Users => Set<UserEntity>();
 }
