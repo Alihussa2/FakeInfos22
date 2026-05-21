@@ -14,9 +14,17 @@ builder.Services.AddScoped<PersonGenerator>();
 builder.Services.AddSingleton<CprValidator>();
 builder.Services.AddSingleton<AddressSearchService>();
 
-// SQLite
-builder.Services.AddDbContext<FakeInfoDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Database
+if (builder.Environment.IsEnvironment("Testing"))
+{
+    builder.Services.AddDbContext<FakeInfoDbContext>(options =>
+        options.UseInMemoryDatabase("TestDb"));
+}
+else
+{
+    builder.Services.AddDbContext<FakeInfoDbContext>(options =>
+        options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
 
 var app = builder.Build();
 
@@ -54,3 +62,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }
