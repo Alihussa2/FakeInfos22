@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace FakeInfo.Tests;
 

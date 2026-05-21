@@ -7,18 +7,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using FakeInfoModels;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace FakeInfo.Tests;
 
 [TestFixture]
 public class ApiIntegrationTests
 {
-    // Integration test - tester FLERE lag sammen: HTTP request → Controller → PersonGenerator → Response
+    // Integration test - tester FLERE lag sammen: HTTP request → Controller → PersonGenerator → Database → Response
     // WebApplicationFactory starter den rigtige ASP.NET Core app i memory uden at mocke noget
     private WebApplicationFactory<Program> _factory = null!;
     private HttpClient _client = null!;
 
-    // PropertyNameCaseInsensitive så JSON felter som "cpr" matcher vores C# property "Cpr"
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true
@@ -32,7 +32,7 @@ public class ApiIntegrationTests
             {
                 builder.ConfigureServices(services =>
                 {
-                    // Fjern den rigtige MySQL database så tests ikke kræver en kørende database
+                    // Fjern den rigtige database så tests ikke kræver en kørende database
                     var descriptor = services.SingleOrDefault(
                         d => d.ServiceType == typeof(DbContextOptions<FakeInfoDbContext>));
                     if (descriptor != null)
@@ -44,24 +44,33 @@ public class ApiIntegrationTests
                 });
             });
 
-        _client = _factory.CreateClient(); // opretter en HTTP klient der taler direkte med den in-memory app
+        _client = _factory.CreateClient();
     }
 
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-        _client.Dispose();  // rydder op efter alle tests er kørt
+        _client.Dispose();
         _factory.Dispose();
     }
 
-    // Integration tests: GET /api/person/full
+    // Hjælpemetode: generer én person og returner dens database-id
+    private async Task<int> GeneratePersonAndGetId()
+    {
+        await _client.GetAsync("/api/person/full");
+        var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<FakeInfoDbContext>();
+        return (await db.GeneratedPersons.OrderByDescending(p => p.CreatedAt).FirstAsync()).Id;
+    }
+
+    // GET /api/person/full
     // Tester at hele kaldet fra HTTP request → controller → service → response virker korrekt
 
     [Test]
     public async Task GetFull_Returns200OK()
     {
         var response = await _client.GetAsync("/api/person/full");
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK)); // smoke test - er endpointet overhovedet tilgængeligt?
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK)); // smoke test - er endpointet tilgængeligt?
     }
 
     [Test]
@@ -69,7 +78,7 @@ public class ApiIntegrationTests
     {
         var response = await _client.GetAsync("/api/person/full");
         Assert.That(response.Content.Headers.ContentType?.MediaType,
-            Is.EqualTo("application/json")); // tjekker at Content-Type headeren er sat korrekt af controlleren
+            Is.EqualTo("application/json")); // tjekker at Content-Type headeren er sat korrekt
     }
 
     [Test]
@@ -96,7 +105,7 @@ public class ApiIntegrationTests
         var response = await _client.GetAsync("/api/person/full");
         var person = await response.Content.ReadFromJsonAsync<PersonFull>(JsonOptions);
 
-        Assert.That(person!.Gender, Is.EqualTo("male").Or.EqualTo("female")); // EP: kun to gyldige værdier er acceptable
+        Assert.That(person!.Gender, Is.EqualTo("male").Or.EqualTo("female")); // EP: kun to gyldige værdier
     }
 
     [Test]
@@ -115,8 +124,8 @@ public class ApiIntegrationTests
         var response = await _client.GetAsync("/api/person/full");
         var person = await response.Content.ReadFromJsonAsync<PersonFull>(JsonOptions);
 
-        Assert.That(person!.Address, Is.Not.Null); // adresse-objektet må ikke mangle i responsen
-        Assert.Multiple(() =>                       // Assert.Multiple samler alle fejl frem for at stoppe ved første
+        Assert.That(person!.Address, Is.Not.Null);
+        Assert.Multiple(() =>
         {
             Assert.That(person.Address.Street, Is.Not.Empty);
             Assert.That(person.Address.Number, Is.Not.Empty);
@@ -133,7 +142,6 @@ public class ApiIntegrationTests
 
         string expectedDate = person!.DateOfBirth.ToString("ddMMyy");
         // Black-box regel: de første 6 cifre i CPR skal være fødselsdatoen på formen ddMMyy
-        // Tester at CprGenerator og PersonGenerator producerer konsistente data sammen
         Assert.That(person.Cpr[..6], Is.EqualTo(expectedDate),
             $"CPR '{person.Cpr}' stemmer ikke overens med DateOfBirth {person.DateOfBirth:dd-MM-yyyy}");
     }
@@ -141,22 +149,19 @@ public class ApiIntegrationTests
     [Test]
     public async Task GetFull_CprLastDigit_MatchesGender()
     {
-        // Køres 10 gange for at undgå at testen tilfældigt består - sandsynlighed for falsk pass er 0.5^10
+        // Køres 10 gange - sandsynlighed for falsk pass er 0.5^10
         // Tester at NameGenerator (køn) og CprGenerator (sidst ciffer) virker korrekt sammen
         for (int i = 0; i < 10; i++)
         {
             var response = await _client.GetAsync("/api/person/full");
             var person = await response.Content.ReadFromJsonAsync<PersonFull>(JsonOptions);
-
             int lastDigit = int.Parse(person!.Cpr[^1].ToString());
 
-            // Black-box regel fra dansk CPR-standard: sidst ciffer er lige for kvinder, ulige for mænd
+            // Black-box regel: sidst ciffer er lige for kvinder, ulige for mænd
             if (person.Gender == "female")
-                Assert.That(lastDigit % 2, Is.EqualTo(0),
-                    $"Kvinde har ulige sidst ciffer: {person.Cpr}");
+                Assert.That(lastDigit % 2, Is.EqualTo(0), $"Kvinde har ulige sidst ciffer: {person.Cpr}");
             else
-                Assert.That(lastDigit % 2, Is.EqualTo(1),
-                    $"Mand har lige sidst ciffer: {person.Cpr}");
+                Assert.That(lastDigit % 2, Is.EqualTo(1), $"Mand har lige sidst ciffer: {person.Cpr}");
         }
     }
 
@@ -165,14 +170,12 @@ public class ApiIntegrationTests
     {
         var response = await _client.GetAsync("/api/person/full");
         var person = await response.Content.ReadFromJsonAsync<PersonFull>(JsonOptions);
-
-        // White-box: vi ved at CleanFirstName() splitter på mellemrum og tager første token
+        // White-box: CleanFirstName() splitter på mellemrum og tager første token
         Assert.That(person!.FirstName, Does.Not.Contain(" "));
     }
 
-    // Integration tests: GET /api/person/bulk?count=n
+    // GET /api/person/bulk?count=n
     // Tester boundary values og equivalence partitions for count parameteren
-    // Tester at Controller validering og PersonGenerator.GenerateBulk() virker korrekt sammen
 
     [TestCase(2)]   // BV: mindste gyldige værdi
     [TestCase(3)]   // BV: én over minimum
@@ -183,8 +186,7 @@ public class ApiIntegrationTests
     public async Task GetBulk_ValidCount_Returns200OK(int count)
     {
         var response = await _client.GetAsync($"/api/person/bulk?count={count}");
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK),
-            $"count={count} burde returnere 200 OK");
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
     }
 
     [TestCase(2)]   // BV: mindste gyldige værdi
@@ -196,9 +198,7 @@ public class ApiIntegrationTests
         var persons = await response.Content.ReadFromJsonAsync<List<PersonFull>>(JsonOptions);
 
         Assert.That(persons, Is.Not.Null);
-        // bekræfter at count parameteren faktisk styrer hvor mange personer der genereres
-        Assert.That(persons!.Count, Is.EqualTo(count),
-            $"Forventede {count} personer men fik {persons.Count}");
+        Assert.That(persons!.Count, Is.EqualTo(count));
     }
 
     [TestCase(1)]   // BV: én under minimum → ugyldig
@@ -209,9 +209,8 @@ public class ApiIntegrationTests
     public async Task GetBulk_InvalidCount_Returns400BadRequest(int count)
     {
         var response = await _client.GetAsync($"/api/person/bulk?count={count}");
-        // Negative test: ugyldigt input skal give 400 Bad Request, ikke 200 eller 500
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest),
-            $"count={count} burde returnere 400 Bad Request");
+        // Negative test: ugyldigt input skal give 400 Bad Request
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
     }
 
     [TestCase(1)]   // BV: én under minimum
@@ -220,10 +219,8 @@ public class ApiIntegrationTests
     {
         var response = await _client.GetAsync($"/api/person/bulk?count={count}");
         var body = await response.Content.ReadAsStringAsync();
-
-        // fejlbeskeden skal indeholde den gyldige range så klienten ved hvad der forventes
-        Assert.That(body, Does.Contain("2").And.Contain("100"),
-            $"Fejlbesked for count={count} skal nævne den gyldige range 2-100. Fik: {body}");
+        // fejlbeskeden skal nævne den gyldige range så klienten ved hvad der forventes
+        Assert.That(body, Does.Contain("2").And.Contain("100"));
     }
 
     [Test]
@@ -237,9 +234,6 @@ public class ApiIntegrationTests
         Assert.That(persons!.Count, Is.EqualTo(10));
     }
 
-    // Datakvalitetstjek: verificerer at alle personer i bulk-svaret er gyldigt genererede
-    // Tester at PersonGenerator og ALLE sub-generatorer virker korrekt sammen for hele listen
-
     [Test]
     public async Task GetBulk_AllPersons_HaveValid10DigitCpr()
     {
@@ -248,9 +242,7 @@ public class ApiIntegrationTests
 
         foreach (var person in persons!)
         {
-            // samme CPR regler som for enkeltperson, men verificeret for hele listen
-            Assert.That(person.Cpr, Has.Length.EqualTo(10),
-                $"{person.FirstName} har ugyldigt CPR '{person.Cpr}'");
+            Assert.That(person.Cpr, Has.Length.EqualTo(10));
             Assert.That(person.Cpr.All(char.IsDigit), Is.True);
         }
     }
@@ -262,9 +254,7 @@ public class ApiIntegrationTests
         var persons = await response.Content.ReadFromJsonAsync<List<PersonFull>>(JsonOptions);
 
         foreach (var person in persons!)
-        {
-            Assert.That(person.Gender, Is.EqualTo("male").Or.EqualTo("female")); // EP: kun disse to værdier er gyldige
-        }
+            Assert.That(person.Gender, Is.EqualTo("male").Or.EqualTo("female")); // EP: kun to gyldige værdier
     }
 
     [Test]
@@ -290,9 +280,148 @@ public class ApiIntegrationTests
         {
             string expected = person.DateOfBirth.ToString("ddMMyy");
             // Black-box regel: CPR dato-del skal matche DateOfBirth for alle genererede personer
-            // Tester at CprGenerator og PersonGenerator producerer konsistente data for alle personer i listen
-            Assert.That(person.Cpr[..6], Is.EqualTo(expected),
-                $"{person.FirstName}: CPR dato '{person.Cpr[..6]}' matcher ikke DateOfBirth '{expected}'");
+            Assert.That(person.Cpr[..6], Is.EqualTo(expected));
         }
+    }
+
+    // GET /api/person/{id}
+    // Tester at Controller henter korrekt person fra databasen via id
+
+    [Test]
+    public async Task GetById_ExistingId_Returns200OK()
+    {
+        int id = await GeneratePersonAndGetId();
+        Assert.That((await _client.GetAsync($"/api/person/{id}")).StatusCode,
+            Is.EqualTo(HttpStatusCode.OK));
+    }
+
+    [Test]
+    public async Task GetById_NonExistingId_Returns404()
+    {
+        // Negative test: id der ikke eksisterer
+        Assert.That((await _client.GetAsync("/api/person/999999")).StatusCode,
+            Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [TestCase(0)]   // BV: lige under minimum
+    [TestCase(-1)]  // EP: negativt id
+    public async Task GetById_InvalidId_ReturnsError(int id)
+    {
+        // Negative test: ugyldige id-værdier
+        var status = (await _client.GetAsync($"/api/person/{id}")).StatusCode;
+        Assert.That(status, Is.EqualTo(HttpStatusCode.NotFound).Or.EqualTo(HttpStatusCode.BadRequest));
+    }
+
+    // GET /api/person/all
+    // Tester Controller og database paginering virker korrekt sammen
+
+    [Test]
+    public async Task GetAll_Returns200OK()
+    {
+        await _client.GetAsync("/api/person/full");
+        Assert.That((await _client.GetAsync("/api/person/all")).StatusCode,
+            Is.EqualTo(HttpStatusCode.OK));
+    }
+
+    [Test]
+    public async Task GetAll_ResponseHasPaginationFields()
+    {
+        await _client.GetAsync("/api/person/full");
+        var body = await (await _client.GetAsync("/api/person/all")).Content.ReadAsStringAsync();
+        Assert.That(body, Does.Contain("total").And.Contain("page").And.Contain("data"));
+    }
+
+    [TestCase(1, 5)]   // gyldig page og pageSize
+    [TestCase(1, 20)]  // standard pageSize
+    [TestCase(1, 100)] // BV: maksimal pageSize
+    public async Task GetAll_ValidPagination_Returns200OK(int page, int pageSize)
+    {
+        var response = await _client.GetAsync($"/api/person/all?page={page}&pageSize={pageSize}");
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+    }
+
+    // PUT /api/person/{id}
+    // Tester at Controller opdaterer korrekt i databasen
+
+    [Test]
+    public async Task UpdatePerson_ValidData_Returns200OK()
+    {
+        int id = await GeneratePersonAndGetId();
+        var response = await _client.PutAsJsonAsync($"/api/person/{id}",
+            new UpdatePersonRequest { FirstName = "TestNavn" });
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+    }
+
+    [Test]
+    public async Task UpdatePerson_ValidData_SavedInDatabase()
+    {
+        // Tester at opdateringen faktisk gemmes i databasen
+        int id = await GeneratePersonAndGetId();
+        await _client.PutAsJsonAsync($"/api/person/{id}",
+            new UpdatePersonRequest { FirstName = "NytNavn" });
+
+        var db = _factory.Services.CreateScope()
+            .ServiceProvider.GetRequiredService<FakeInfoDbContext>();
+        Assert.That((await db.GeneratedPersons.FindAsync(id))!.FirstName, Is.EqualTo("NytNavn"));
+    }
+
+    [Test]
+    public async Task UpdatePerson_InvalidPhone_Returns400()
+    {
+        // Negative test: ugyldigt telefonnummer skal give 400
+        int id = await GeneratePersonAndGetId();
+        var response = await _client.PutAsJsonAsync($"/api/person/{id}",
+            new UpdatePersonRequest { Phone = "123" });
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    }
+
+    [Test]
+    public async Task UpdatePerson_NonExistingId_Returns404()
+    {
+        // Negative test: person der ikke eksisterer
+        var response = await _client.PutAsJsonAsync("/api/person/999999",
+            new UpdatePersonRequest { FirstName = "Test" });
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    // DELETE /api/person/{id}
+    // Tester at Controller sletter korrekt fra databasen
+
+    [Test]
+    public async Task DeletePerson_ExistingId_Returns200OK()
+    {
+        int id = await GeneratePersonAndGetId();
+        Assert.That((await _client.DeleteAsync($"/api/person/{id}")).StatusCode,
+            Is.EqualTo(HttpStatusCode.OK));
+    }
+
+    [Test]
+    public async Task DeletePerson_ExistingId_RemovedFromDatabase()
+    {
+        // Tester at personen faktisk er væk fra databasen
+        int id = await GeneratePersonAndGetId();
+        await _client.DeleteAsync($"/api/person/{id}");
+
+        var db = _factory.Services.CreateScope()
+            .ServiceProvider.GetRequiredService<FakeInfoDbContext>();
+        Assert.That(await db.GeneratedPersons.FindAsync(id), Is.Null);
+    }
+
+    [Test]
+    public async Task DeletePerson_NonExistingId_Returns404()
+    {
+        // Negative test: sletning af person der ikke eksisterer
+        Assert.That((await _client.DeleteAsync("/api/person/999999")).StatusCode,
+            Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
+    public async Task DeletePerson_GetAfterDelete_Returns404()
+    {
+        // Tester at man ikke kan hente en person efter den er slettet
+        int id = await GeneratePersonAndGetId();
+        await _client.DeleteAsync($"/api/person/{id}");
+        Assert.That((await _client.GetAsync($"/api/person/{id}")).StatusCode,
+            Is.EqualTo(HttpStatusCode.NotFound));
     }
 }
