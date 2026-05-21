@@ -31,6 +31,9 @@ jobs:
           dotnet build FakeInfo.Tests/FakeInfo.Tests.csproj --no-restore
           dotnet build FakeInfo.IntegrationTests/FakeInfo.IntegrationTests.csproj --no-restore
 
+      - name: Copy testhost.deps.json
+        run: cp FakeInfo.Tests/bin/Debug/net8.0/FakeInfo.Tests.deps.json FakeInfo.Tests/bin/Debug/net8.0/testhost.deps.json
+
       - name: Install Playwright browsers
         run: pwsh FakeInfo.IntegrationTests/bin/Debug/net8.0/playwright.ps1 install --with-deps chromium
 
