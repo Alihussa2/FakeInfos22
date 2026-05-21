@@ -44,7 +44,7 @@ jobs:
         run: sleep 5
 
       - name: Run unit tests
-        run: dotnet test FakeInfo.Tests/FakeInfo.Tests.csproj --verbosity normal
+        run: dotnet test FakeInfo.Tests/FakeInfo.Tests.csproj --verbosity normal --filter "FullyQualifiedName!~ApiIntegrationTests&FullyQualifiedName!~DatabaseIntegrationTests"
 
       - name: Run integration tests
         run: dotnet test FakeInfo.IntegrationTests/FakeInfo.IntegrationTests.csproj --verbosity normal
