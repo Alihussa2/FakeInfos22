@@ -1,0 +1,182 @@
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Microsoft (R) Visual C# Compiler",
+        "version": "4.11.0.0",
+        "fileVersion": "4.11.0-3.25569.22 (3fb752d4)",
+        "semanticVersion": "4.11.0",
+        "language": "da-DK"
+      },
+      "results": [
+        {
+          "ruleId": "NUnit2045",
+          "level": "note",
+          "message": "Call independent Assert statements from inside an Assert.Multiple",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/daniy/RiderProjects/FakeInfos22/FakeInfo.Tests/ApiIntegrationTests.cs",
+                "region": {
+                  "startLine": 89,
+                  "startColumn": 9,
+                  "endLine": 89,
+                  "endColumn": 57
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "NUnit2045",
+          "level": "note",
+          "message": "Call independent Assert statements from inside an Assert.Multiple",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/daniy/RiderProjects/FakeInfos22/FakeInfo.Tests/ApiIntegrationTests.cs",
+                "region": {
+                  "startLine": 108,
+                  "startColumn": 9,
+                  "endLine": 108,
+                  "endColumn": 58
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1866",
+          "level": "note",
+          "message": "Use 'string.StartsWith(char)' instead of 'string.StartsWith(string)' when you have a string with a single char",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/daniy/RiderProjects/FakeInfos22/FakeInfo.Tests/PhoneGeneratorTests.cs",
+                "region": {
+                  "startLine": 127,
+                  "startColumn": 37,
+                  "endLine": 127,
+                  "endColumn": 42
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "NUnit2046",
+          "level": "note",
+          "message": "Use Assert.That(<collection>, Has.Count.EqualTo(<value>)",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/daniy/RiderProjects/FakeInfos22/FakeInfo.Tests/ApiIntegrationTests.cs",
+                "region": {
+                  "startLine": 200,
+                  "startColumn": 21,
+                  "endLine": 200,
+                  "endColumn": 35
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "NUnit2046",
+          "level": "note",
+          "message": "Use Assert.That(<collection>, Has.Count.EqualTo(<value>)",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/daniy/RiderProjects/FakeInfos22/FakeInfo.Tests/DatabaseIntegrationTests.cs",
+                "region": {
+                  "startLine": 192,
+                  "startColumn": 21,
+                  "endLine": 192,
+                  "endColumn": 35
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "NUnit2046",
+          "level": "note",
+          "message": "Use Assert.That(<collection>, Has.Count.EqualTo(<value>)",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/daniy/RiderProjects/FakeInfos22/FakeInfo.Tests/ApiIntegrationTests.cs",
+                "region": {
+                  "startLine": 237,
+                  "startColumn": 21,
+                  "endLine": 237,
+                  "endColumn": 35
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "CA1866": {
+          "id": "CA1866",
+          "shortDescription": "Use char overload",
+          "fullDescription": "The char overload is a better performing overload than a string with a single char.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1866",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "NUnit2045": {
+          "id": "NUnit2045",
+          "shortDescription": "Use Assert.Multiple",
+          "fullDescription": "Hosting Asserts inside an Assert.Multiple allows detecting more than one failure.",
+          "defaultLevel": "note",
+          "helpUri": "https://github.com/nunit/nunit.analyzers/tree/master/documentation/NUnit2045.md",
+          "properties": {
+            "category": "Assertion",
+            "isEnabledByDefault": true
+          }
+        },
+        "NUnit2046": {
+          "id": "NUnit2046",
+          "shortDescription": "Use CollectionConstraint for better assertion messages in case of failure",
+          "fullDescription": "Use Has.Length/Has.Count/Is.Empty instead of testing property directly.",
+          "defaultLevel": "note",
+          "helpUri": "https://github.com/nunit/nunit.analyzers/tree/master/documentation/NUnit2046.md",
+          "properties": {
+            "category": "Assertion",
+            "isEnabledByDefault": true
+          }
+        }
+      }
+    }
+  ]
+}

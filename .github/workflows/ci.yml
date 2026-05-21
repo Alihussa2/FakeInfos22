@@ -25,11 +25,7 @@ jobs:
           dotnet restore FakeInfo.Tests/FakeInfo.Tests.csproj
           dotnet restore FakeInfo.IntegrationTests/FakeInfo.IntegrationTests.csproj
 
-      - name: Build
-        run: dotnet build FakeInfo.Core/FakeInfo.Core.csproj --no-restore
-
-      - name: Install Playwright browsers
-        run: pwsh FakeInfo.IntegrationTests/bin/Debug/net8.0/playwright.ps1 install --with-deps chromium
+   
 
       - name: Start application
         run: dotnet run --project FakeInfo.Core/FakeInfo.Core.csproj --urls "http://localhost:5028" &

@@ -1,0 +1,105 @@
+Â
+NC:\Users\daniy\RiderProjects\FakeInfos22\FakeInfo.Tests\PhoneGeneratorTests.csFakeInfo.TestsO
+"FakeInfo.Tests.PhoneGeneratorTests)GeneratePhoneNumber_Always_Returns8DigitsP
+"FakeInfo.Tests.PhoneGeneratorTests*GeneratePhoneNumber_100Times_AlwaysLength8R
+"FakeInfo.Tests.PhoneGeneratorTests,GeneratePhoneNumber_Always_ReturnsDigitsOnlyS
+"FakeInfo.Tests.PhoneGeneratorTests-GeneratePhoneNumber_100Times_AlwaysDigitsOnlyV
+"FakeInfo.Tests.PhoneGeneratorTests0GeneratePhoneNumber_Always_StartsWithValidPrefixT
+"FakeInfo.Tests.PhoneGeneratorTests.GeneratePhoneNumber_200Times_AlwaysValidPrefix[
+"FakeInfo.Tests.PhoneGeneratorTests5GeneratePhoneNumber_PrefixLength1_StillReturns8Digits[
+"FakeInfo.Tests.PhoneGeneratorTests5GeneratePhoneNumber_PrefixLength3_StillReturns8DigitsX
+"FakeInfo.Tests.PhoneGeneratorTests2GeneratePhoneNumber_ProducesMultipleDistinctValuesR
+"FakeInfo.Tests.PhoneGeneratorTests,GeneratePhoneNumber_Never_ReturnsNullOrEmpty¿
+OC:\Users\daniy\RiderProjects\FakeInfos22\FakeInfo.Tests\PersonGeneratorTests.csFakeInfo.TestsL
+#FakeInfo.Tests.PersonGeneratorTests%GenerateNameOnly_FirstName_IsNotEmptyK
+#FakeInfo.Tests.PersonGeneratorTests$GenerateNameOnly_LastName_IsNotEmptyK
+#FakeInfo.Tests.PersonGeneratorTests$GenerateNameOnly_Gender_IsValidValueb
+#FakeInfo.Tests.PersonGeneratorTests;GenerateNameAndDateOfBirth_DateOfBirth_IsBetween1950And2010Y
+#FakeInfo.Tests.PersonGeneratorTests2GenerateNameAndDateOfBirth_DateOfBirth_IsInThePastX
+#FakeInfo.Tests.PersonGeneratorTests1GenerateNameAndDateOfBirth_AllFields_ArePopulatedL
+#FakeInfo.Tests.PersonGeneratorTests%GenerateCprOnly_Cpr_IsExactly10Digits`
+#FakeInfo.Tests.PersonGeneratorTests9GenerateCprOnly_CalledMultipleTimes_ProducesVariedResultsO
+#FakeInfo.Tests.PersonGeneratorTests(GenerateCprAndName_Cpr_IsExactly10DigitsP
+#FakeInfo.Tests.PersonGeneratorTests)GenerateCprAndName_AllFields_ArePopulatedc
+#FakeInfo.Tests.PersonGeneratorTests<GenerateCprNameAndDateOfBirth_CprDatePart_MatchesDateOfBirtha
+#FakeInfo.Tests.PersonGeneratorTests:GenerateCprNameAndDateOfBirth_CprGenderDigit_MatchesGender\
+#FakeInfo.Tests.PersonGeneratorTests5GenerateCprNameAndDateOfBirth_DateOfBirth_WithinRangeQ
+#FakeInfo.Tests.PersonGeneratorTests*GenerateAddressOnly_Street_IsFromKnownListO
+#FakeInfo.Tests.PersonGeneratorTests(GenerateAddressOnly_PostalCode_Is4DigitsP
+#FakeInfo.Tests.PersonGeneratorTests)GenerateAddressOnly_AllFields_AreNonEmptyO
+#FakeInfo.Tests.PersonGeneratorTests(GeneratePhoneOnly_Phone_IsExactly8DigitsX
+#FakeInfo.Tests.PersonGeneratorTests1GenerateFullPerson_AllTopLevelFields_ArePopulatedO
+#FakeInfo.Tests.PersonGeneratorTests(GenerateFullPerson_Cpr_IsExactly10DigitsX
+#FakeInfo.Tests.PersonGeneratorTests1GenerateFullPerson_CprDatePart_MatchesDateOfBirthV
+#FakeInfo.Tests.PersonGeneratorTests/GenerateFullPerson_CprGenderDigit_MatchesGenderR
+#FakeInfo.Tests.PersonGeneratorTests+GenerateFullPerson_Address_IsFullyPopulatedP
+#FakeInfo.Tests.PersonGeneratorTests)GenerateFullPerson_Phone_IsExactly8DigitsP
+#FakeInfo.Tests.PersonGeneratorTests)GenerateBulk_ValidCount_ReturnsExactCountQ
+#FakeInfo.Tests.PersonGeneratorTests*GenerateBulk_EachPerson_HasValid10DigitCprM
+#FakeInfo.Tests.PersonGeneratorTests&GenerateBulk_EachPerson_HasValidGenderO
+#FakeInfo.Tests.PersonGeneratorTests(GenerateBulk_EachPerson_HasNonEmptyPhoneS
+#FakeInfo.Tests.PersonGeneratorTests,GenerateBulk_10Persons_HasAtLeastSomeVariety£
+MC:\Users\daniy\RiderProjects\FakeInfos22\FakeInfo.Tests\NameGeneratorTests.csFakeInfo.TestsF
+!FakeInfo.Tests.NameGeneratorTests!GenerateName_FirstName_IsNotEmptyE
+!FakeInfo.Tests.NameGeneratorTests GenerateName_LastName_IsNotEmptyE
+!FakeInfo.Tests.NameGeneratorTests GenerateName_Gender_IsValidValueL
+!FakeInfo.Tests.NameGeneratorTests'GenerateName_FirstName_ContainsNoSpacesN
+!FakeInfo.Tests.NameGeneratorTests)GenerateName_100Times_ProducesBothGendersT
+!FakeInfo.Tests.NameGeneratorTests/GenerateName_ProducesMultipleDistinctFirstNamesM
+!FakeInfo.Tests.NameGeneratorTests(GenerateName_CalledManyTimes_NeverThrowsN
+$FakeInfo.Tests.AddressGeneratorTests&GenerateAddress_Street_IsFromKnownListY
+$FakeInfo.Tests.AddressGeneratorTests1GenerateAddress_50Times_StreetAlwaysFromKnownListS
+$FakeInfo.Tests.AddressGeneratorTests+GenerateAddress_PostalCode_IsExactly4DigitsW
+$FakeInfo.Tests.AddressGeneratorTests/GenerateAddress_50Times_PostalCodeAlways4DigitsN
+$FakeInfo.Tests.AddressGeneratorTests&GenerateAddress_Number_StartsWithDigitI
+$FakeInfo.Tests.AddressGeneratorTests!GenerateAddress_Number_IsNotEmptyP
+$FakeInfo.Tests.AddressGeneratorTests(GenerateAddress_Floor_IsStOrNumeric1To99G
+$FakeInfo.Tests.AddressGeneratorTestsGenerateAddress_Door_IsNotEmptyS
+$FakeInfo.Tests.AddressGeneratorTests+GenerateAddress_Door_MatchesExpectedPatternG
+$FakeInfo.Tests.AddressGeneratorTestsGenerateAddress_Town_IsNotEmptyN
+$FakeInfo.Tests.AddressGeneratorTests&GenerateAddress_AllFields_ArePopulatedW
+$FakeInfo.Tests.AddressGeneratorTests/GenerateAddress_ProducesMultipleDistinctStreetsS
+$FakeInfo.Tests.AddressGeneratorTests+GenerateAddress_CalledManyTimes_NeverThrows¢
+SC:\Users\daniy\RiderProjects\FakeInfos22\FakeInfo.Tests\DatabaseIntegrationTests.csFakeInfo.TestsH
+'FakeInfo.Tests.DatabaseIntegrationTestsGetFull_GemmerPersonIDatabaseM
+'FakeInfo.Tests.DatabaseIntegrationTests"GetFull_GemmerKorrektCpr_IDatabaseN
+'FakeInfo.Tests.DatabaseIntegrationTests#GetFull_GemmerKorrektKÃ¸n_IDatabaseT
+'FakeInfo.Tests.DatabaseIntegrationTests)GetFull_GemmerAlleAdressefelter_IDatabaseL
+'FakeInfo.Tests.DatabaseIntegrationTests!GetFull_GemmerCreatedAt_IDatabaseW
+'FakeInfo.Tests.DatabaseIntegrationTests,GetBulk_GemmerKorrektAntalPersoner_IDatabase[
+'FakeInfo.Tests.DatabaseIntegrationTests0GetBulk_GemmerAllePersonerMedGyldigCpr_IDatabaseQ
+'FakeInfo.Tests.DatabaseIntegrationTests&GetHistory_ReturnerPersonerFraDatabaseQ
+'FakeInfo.Tests.DatabaseIntegrationTests&GetHistory_ReturnerMaksimalt20PersonerR
+'FakeInfo.Tests.DatabaseIntegrationTests'GetHistory_TomDatabase_ReturnerTomListe¼
+LC:\Users\daniy\RiderProjects\FakeInfos22\FakeInfo.Tests\CprGeneratorTests.csFakeInfo.TestsJ
+ FakeInfo.Tests.CprGeneratorTests&GenerateCpr_Always_Returns10CharStringH
+ FakeInfo.Tests.CprGeneratorTests$GenerateCpr_Always_ReturnsDigitsOnlyK
+ FakeInfo.Tests.CprGeneratorTests'GenerateCpr_DatePart_MatchesDateOfBirthF
+ FakeInfo.Tests.CprGeneratorTests"GenerateCpr_Female_LastDigitIsEvenC
+ FakeInfo.Tests.CprGeneratorTestsGenerateCpr_Male_LastDigitIsOddV
+ FakeInfo.Tests.CprGeneratorTests2GenerateCpr_GenderFEMALE_UpperCase_LastDigitIsEvenV
+ FakeInfo.Tests.CprGeneratorTests2GenerateCpr_GenderFemale_MixedCase_LastDigitIsEvenL
+ FakeInfo.Tests.CprGeneratorTests(GenerateCpr_UnknownGender_LastDigitIsOddQ
+ FakeInfo.Tests.CprGeneratorTests-GenerateCpr_SequentialPart_IsBetween100And999N
+ FakeInfo.Tests.CprGeneratorTests*GenerateCpr_GenderVariants_LastDigitParityK
+ FakeInfo.Tests.CprGeneratorTests'GenerateCpr_CalledManyTimes_NeverThrowsù
+NC:\Users\daniy\RiderProjects\FakeInfos22\FakeInfo.Tests\ApiIntegrationTests.csFakeInfo.Tests:
+"FakeInfo.Tests.ApiIntegrationTestsGetFull_Returns200OKD
+"FakeInfo.Tests.ApiIntegrationTestsGetFull_ReturnsJsonContentTypeS
+"FakeInfo.Tests.ApiIntegrationTests-GetFull_ResponseBody_DeserializesToPersonFullC
+"FakeInfo.Tests.ApiIntegrationTestsGetFull_Cpr_IsExactly10DigitsA
+"FakeInfo.Tests.ApiIntegrationTestsGetFull_Gender_IsValidValueD
+"FakeInfo.Tests.ApiIntegrationTestsGetFull_Phone_IsExactly8DigitsF
+"FakeInfo.Tests.ApiIntegrationTests GetFull_Address_IsFullyPopulatedL
+"FakeInfo.Tests.ApiIntegrationTests&GetFull_CprDatePart_MatchesDateOfBirthH
+"FakeInfo.Tests.ApiIntegrationTests"GetFull_CprLastDigit_MatchesGenderC
+"FakeInfo.Tests.ApiIntegrationTestsGetFull_FirstName_HasNoSpacesE
+"FakeInfo.Tests.ApiIntegrationTestsGetBulk_ValidCount_Returns200OKT
+"FakeInfo.Tests.ApiIntegrationTests.GetBulk_ValidCount_ReturnsExactNumberOfPersonsO
+"FakeInfo.Tests.ApiIntegrationTests)GetBulk_InvalidCount_Returns400BadRequest\
+"FakeInfo.Tests.ApiIntegrationTests6GetBulk_InvalidCount_ResponseBody_ContainsErrorMessageO
+"FakeInfo.Tests.ApiIntegrationTests)GetBulk_NoCountParameter_Returns10PersonsL
+"FakeInfo.Tests.ApiIntegrationTests&GetBulk_AllPersons_HaveValid10DigitCprH
+"FakeInfo.Tests.ApiIntegrationTests"GetBulk_AllPersons_HaveValidGenderH
+"FakeInfo.Tests.ApiIntegrationTests"GetBulk_AllPersons_Have8DigitPhoneN
+"FakeInfo.Tests.ApiIntegrationTests(GetBulk_AllPersons_CprDatePartMatchesDob

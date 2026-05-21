@@ -1,0 +1,1 @@
+ZRMC:\Users\daniy\RiderProjects\FakeInfos22\FakeInfo.Tests\FakeInfo.Tests.csprojòCSharp12

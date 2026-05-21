@@ -1,0 +1,6 @@
+projectKey=softkvali2.0
+serverUrl=http://localhost:9000
+serverVersion=26.5.0.122743
+dashboardUrl=http://localhost:9000/dashboard?id=softkvali2.0
+ceTaskId=4a4cc716-cc85-4f31-9f3d-6756aea790e1
+ceTaskUrl=http://localhost:9000/api/ce/task?id=4a4cc716-cc85-4f31-9f3d-6756aea790e1

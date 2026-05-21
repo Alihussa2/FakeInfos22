@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using FakeInfoModels;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace FakeInfo.Tests;
 

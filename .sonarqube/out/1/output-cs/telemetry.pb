@@ -1,0 +1,1 @@
+XRKC:\Users\daniy\RiderProjects\FakeInfos22\FakeInfo.Core\FakeInfo.Core.csprojòCSharp12
